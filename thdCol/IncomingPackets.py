@@ -10,29 +10,16 @@ class IncomingPackets :
 
         incPack.grid(row=0, sticky="nwse")
 
-        listbox = Listbox(incPack)
+        self.listbox = Listbox(incPack)
         
-        listbox.grid(row=0,
+        self.listbox.grid(row=0,
                 padx=10,
                 pady=10,
                 sticky="nwse")
+        
+        if self.listbox.size() == 0 :
+            self.addPacket('NO PACKET RECEIVED')
 
-        for item in ["TEXT", 
-                "PICTURE", 
-                "ALT", 
-                "TEXT", 
-                "PICTURE", 
-                "ALT", 
-                "TEXT", 
-                "TEXT",
-                "PICTURE", 
-                "ALT", 
-                "TEXT", 
-                "PICTURE", 
-                "ALT", 
-                "PICTURE", 
-                "ALT", 
-                "TEXT", 
-                "TEXT"]: 
-            listbox.insert(END, item)
-
+   
+    def addPacket(self, packet):
+        self.listbox.insert(END, packet) 

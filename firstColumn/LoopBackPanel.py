@@ -28,9 +28,9 @@ class LoopBackPanel :
         self.modCall.grid(row=3, 
                 sticky="w") 
         
-        reachStatus = Label(loopback, text="NOT REACHED")
-        reachStatus.grid(row=4, sticky="w")
-        reachStatus.config(background="red")
+        self.reachStatus = Label(loopback, text="NOT REACHED")
+        self.reachStatus.grid(row=4, sticky="w")
+        self.reachStatus.config(background="red")
 
         lpbckButton = Button(loopback, 
                 text="LOOPBACK",
@@ -38,11 +38,16 @@ class LoopBackPanel :
                 height="5",
                 command=self.loopBack)
         lpbckButton.grid(row=5, pady=10)
-
+    
     def loopBack(self):
         self.main.setCallsign(
                 self.usrCall.get(),
                 self.modCall.get())
 
         self.main.telecommand("LOOPBACK")
+
+    def setReached(self):
+        self.reachStatus.config(text="REACHED")
+        self.reachStatus.config(background="green")
+        self.reachStatus.config(fg="white")
 
