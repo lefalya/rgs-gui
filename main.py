@@ -13,6 +13,8 @@ from module import Direwolf
 
 from inout import Telecommand
 
+from queue import Queue
+
 import os
 import serial 
 import time 
@@ -27,10 +29,13 @@ class App:
         self.userCallsign = ''
         self.moduleCallsign = ''
         self.encoder = Encoder()
-
+    
         firstCol = Frame(master)
         secCol = Frame(master)
         thdCol = Frame(master)
+
+        # receive flag for avoid loopback
+        self.receiveFlag = True
 
         self.lpbckpnl    = LoopBackPanel(self, firstCol) 
         self.bustMode    = USBCam(self, firstCol) 
@@ -73,16 +78,16 @@ class App:
         if self.applySerial == True:
             self.serial.setRTS(False)
     
-    def recv_data(self): 
-        while True : 
+    def recv_data(self):  
+        while True :
             receive = rx.receive()
             if receive.closed == True : 
                 print_lock.release()
                 break
 
             self.cparse.parse(receive.callsign, 
-                    receive.status,
                     receive.message)
+
 
     def setCallsign(self, userCallsign, moduleCallsign): 
         self.userCallsign = userCallsign
@@ -91,15 +96,17 @@ class App:
     def telecommand(self, command):
         if self.applySerial == True:
             self.serial.setRTS(True)
-        time.sleep(0.5)
+
+        q.put(False)
         
+        time.sleep(0.5)
         if self.userCallsign != '' and self.moduleCallsign != '':  
             self.encoder.encode(self.userCallsign,
                     self.moduleCallsign,
                     command)
         else: 
             playsound('warning.wav')
-
+        
         if self.applySerial == True: 
             self.serial.setRTS(False)
     
@@ -118,11 +125,15 @@ class App:
 
         if self.applySerial == True: 
             self.serial.setRTS(False)
-
+    
+    def getReceiveFlag(self):
+        return self.receiveFlag
 if __name__ == "__main__":
+    q = Queue()
     root = Tk()
-    rx = Direwolf('localhost', 8001)
+    rx = Direwolf('localhost', 8001,q)
     root.title('RGS MISSION CONTROL CENTER')
+
     app = App(root)
 
     print_lock.acquire()

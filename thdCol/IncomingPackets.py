@@ -4,13 +4,14 @@ class IncomingPackets :
     def __init__(self, column): 
 
         incPack = LabelFrame(column, 
-                text="INCOMING PACKETS",
+                text="Message",
                 padx=10,
                 pady=10) 
 
         incPack.grid(row=0, sticky="nwse")
 
-        self.listbox = Listbox(incPack)
+        self.listbox = Listbox(incPack,
+                height=30)
         
         self.listbox.grid(row=0,
                 padx=10,
