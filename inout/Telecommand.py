@@ -1,9 +1,9 @@
 class Telecommand : 
-    def __init__(self, main): 
+    def __init__(self, main, callsign): 
         self.main = main
-
-    def parse(self,callsign,command): 
-        if command != '':
+        self.callsign = callsign
+    def parse(self,callsign,command):
+        if callsign != self.callsign :
             self.execute(callsign,command) 
     
     def execute(self, callsign, command): 

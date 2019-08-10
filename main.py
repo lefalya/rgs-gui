@@ -6,6 +6,7 @@ from firstColumn import USBCam
 from firstColumn import TCPConnection
 from secCol import DataControl
 from secCol import TLE 
+from secCol import PAS
 from thdCol import IncomingPackets
 
 from module import Encoder 
@@ -43,7 +44,7 @@ class App:
     
         self.datCon      = DataControl(self, secCol) 
         self.tle         = TLE(self, secCol) 
-
+        self.pas         = PAS(self, secCol)
         self.incPack     = IncomingPackets(thdCol)
 
         self.applySerial = False 
@@ -73,7 +74,7 @@ class App:
                 padx=10,
                 pady=20)
         
-        self.cparse = Telecommand(self)
+        self.cparse = Telecommand(self,self.userCallsign)
 
         if self.applySerial == True:
             self.serial.setRTS(False)
@@ -97,8 +98,6 @@ class App:
         if self.applySerial == True:
             self.serial.setRTS(True)
 
-        q.put(False)
-        
         time.sleep(0.5)
         if self.userCallsign != '' and self.moduleCallsign != '':  
             self.encoder.encode(self.userCallsign,
@@ -113,6 +112,7 @@ class App:
     def telecommand_with_message(self, command, message):
         if self.applySerial == True:
             self.serial.setRTS(True)
+        
         time.sleep(0.5)
         
         if self.userCallsign != '' and self.moduleCallsign != '':  
